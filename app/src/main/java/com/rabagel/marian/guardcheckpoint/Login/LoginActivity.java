@@ -25,8 +25,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     }
 
     private void initializeViews() {
-        userName = findViewById(R.id.user_name);
-        password = findViewById(R.id.password);
+        userName = findViewById(R.id.user_name_textBox);
+        password = findViewById(R.id.password_textBox);
         loginButton = findViewById(R.id.login_button);
         loginButton.setOnClickListener((View view) ->
                 loginPresenter.doLogin(userName.getText().toString().trim(), password.getText().toString().trim()));
@@ -43,11 +43,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void showLoginSuccessMessage() {
-        Snackbar.make(loginButton, "Logare cu success", Snackbar.LENGTH_LONG);
+        Snackbar.make(loginButton, R.string.LoginSuccessfulMessage, Snackbar.LENGTH_LONG);
     }
 
     @Override
     public void showErrorMessageForIncorrectUser() {
-        Snackbar.make(password, "Utilizator si parola incorecta", Snackbar.LENGTH_LONG).show();
+        Snackbar.make(password, R.string.IncorrectUserError, Snackbar.LENGTH_LONG).show();
     }
 }

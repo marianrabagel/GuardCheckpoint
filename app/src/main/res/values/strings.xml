@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">GuardCheckpoint</string>
+    <string name="user_name_placeholder">Utilizator</string>
+    <string name="password_placeholder">Parola</string>
+    <string name="login_text">Login</string>
+    <string name="IncorrectUserError">"Utilizator si parola incorecta"</string>
+    <string name="LoginSuccessfulMessage">"Logare cu success"</string>
+    <string name="UserName">"marian"</string>
+    <string name="Password">"android"</string>
 </resources>
