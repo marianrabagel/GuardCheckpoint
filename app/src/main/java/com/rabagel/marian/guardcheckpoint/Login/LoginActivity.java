@@ -38,12 +38,12 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void showErrorMessageForMaxLoginAttempts() {
-        Snackbar.make(loginButton, "Ati depasit numarul de incercarci permise", Snackbar.LENGTH_LONG);
+        Snackbar.make(loginButton, R.string.MaxTotalAttemptsMessage, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
     public void showLoginSuccessMessage() {
-        Snackbar.make(loginButton, R.string.LoginSuccessfulMessage, Snackbar.LENGTH_LONG);
+        Snackbar.make(loginButton, R.string.LoginSuccessfulMessage, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

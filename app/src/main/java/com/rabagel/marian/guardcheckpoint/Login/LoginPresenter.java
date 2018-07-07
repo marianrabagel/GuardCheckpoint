@@ -32,7 +32,7 @@ public class LoginPresenter {
     }
 
     private boolean hasRights(String userName, String password) {
-        return userName == "marian" && password == "android";
+        return userName.equals("marian") && password.equals("android");
     }
 
     public void doLogin(String userName, String password) {

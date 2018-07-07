@@ -7,4 +7,5 @@
     <string name="LoginSuccessfulMessage">"Logare cu success"</string>
     <string name="UserName">"marian"</string>
     <string name="Password">"android"</string>
+    <string name="MaxTotalAttemptsMessage">"Ati depasit numarul de incercarci permise"</string>
 </resources>

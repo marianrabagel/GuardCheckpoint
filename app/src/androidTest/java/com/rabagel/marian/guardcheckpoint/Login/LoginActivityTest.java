@@ -1,15 +1,15 @@
 package com.rabagel.marian.guardcheckpoint.Login;
 
+import android.content.Context;
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.rule.ActivityTestRule;
-
 import com.rabagel.marian.guardcheckpoint.R;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -25,12 +25,14 @@ public class LoginActivityTest {
     @Test
     public void checkUserNameIsDisplayed(){
         activityActivityTestRule.launchActivity(new Intent());
+
         onView(withId(R.id.user_name_textBox)).check(matches(isDisplayed()));
     }
 
     @Test
     public void checkErrorMessageIsDisplayedForEmptyData(){
         activityActivityTestRule.launchActivity(new Intent());
+
         onView(withId(R.id.login_button)).check(matches(isDisplayed())).perform(click());
         onView(withText(R.string.IncorrectUserError)).check(matches(isDisplayed()));
     }
@@ -38,11 +40,11 @@ public class LoginActivityTest {
     @Test
     public void checkLoginSuccessful(){
         activityActivityTestRule.launchActivity(new Intent());
+        Context context = InstrumentationRegistry.getTargetContext();
 
-       // String s = String.valueOf(R.string.UserName);
-        onView(withId(R.id.user_name_textBox)).perform(typeText( "s"), closeSoftKeyboard());
-        onView(withId(R.id.password_textBox)).perform(typeText(String.valueOf(R.string.Password)), closeSoftKeyboard());
-        onView(withText(R.id.login_button)).check(matches(isDisplayed())).perform(click());
+        onView(withId(R.id.user_name_textBox)).perform(typeText(context.getString(R.string.UserName)));
+        onView(withId(R.id.password_textBox)).perform(typeText(context.getString(R.string.Password)));
+        onView(withId(R.id.login_button)).check(matches(isDisplayed())).perform(click());
         onView(withText(R.string.LoginSuccessfulMessage)).check(matches(isDisplayed()));
     }
 }
