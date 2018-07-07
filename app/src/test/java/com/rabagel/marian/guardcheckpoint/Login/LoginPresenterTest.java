@@ -15,6 +15,7 @@ public class LoginPresenterTest {
     ILoginView loginView;
     @Before
     public void setUp() {
+
         loginView = mock(ILoginView.class);
     }
 
