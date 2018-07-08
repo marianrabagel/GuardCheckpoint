@@ -1,78 +1,84 @@
 package com.rabagel.marian.guardcheckpoint.Login;
 
+import com.rabagel.marian.guardcheckpoint.Communication.Contracts.IRequestHandler;
 import com.rabagel.marian.guardcheckpoint.Login.Contracts.ILoginView;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 public class LoginPresenterTest {
-    ILoginView loginView;
+    ILoginView loginViewMock;
+    IRequestHandler requestHandlerMock;
+    LoginPresenter loginPresenter;
+
     @Before
     public void setUp() {
 
-        loginView = mock(ILoginView.class);
+        loginViewMock = mock(ILoginView.class);
+        requestHandlerMock = mock(IRequestHandler.class);
+        loginPresenter = new LoginPresenter(loginViewMock, requestHandlerMock);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void isUserNameAndPasswordValidWhenUserNameIsNullThrowsIllegalArgumentException(){
+        loginPresenter.doLogin(null, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void isUserNameAndPasswordValidWhenPasswordIsNullThrowsIllegalArgumentException(){
+        loginPresenter.doLogin(null, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void isUserNameAndPasswordValidWhenUserNameIsEmptyStringThrowsIllegalArgumentException(){
+        loginPresenter.doLogin("", "");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void isUserNameAndPasswordValidWhenPasswordIsEmptyStringThrowsIllegalArgumentException(){
+        loginPresenter.doLogin("test", "");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void isUserNameAndPasswordValidWhenUserNameIsBlankStringThrowsIllegalArgumentException(){
+        loginPresenter.doLogin("   ", "   ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void isUserNameAndPasswordValidWhenPasswordIsBlankStringThrowsIllegalArgumentException(){
+        loginPresenter.doLogin("test", "   ");
     }
 
     @Test
-    public void isLoginAttemptIsExceededAfterThreeAttemptsReturnsTrue(){
+    public void doLoginCallsRequestHandlerIsUserNameAndPasswordValid(){
+        loginPresenter.doLogin("test", "test");
 
-        LoginPresenter loginPresenter = new LoginPresenter(loginView);
-
-        Assert.assertEquals(1, loginPresenter.incrementLoginAttempt());
-        Assert.assertEquals(2, loginPresenter.incrementLoginAttempt());
-        Assert.assertEquals(3, loginPresenter.incrementLoginAttempt());
-        Assert.assertTrue(loginPresenter.isLoginAttemptExceeded());
+        verify(requestHandlerMock).getPostResponse(anyString(), anyString());
     }
 
     @Test
-    public void isLoginAttemptIsExceededAfterOneAttemptsReturnsFalse(){
-        LoginPresenter loginPresenter = new LoginPresenter(loginView);
+    public void doLoginWhenCredentialsAreValidCallsLoginViewShowLoginSuccessMessage(){
+        when(requestHandlerMock.getPostResponse(anyString(), anyString())).thenReturn(true);
 
-        Assert.assertEquals(1, loginPresenter.incrementLoginAttempt());
-        Assert.assertTrue(!loginPresenter.isLoginAttemptExceeded());
+        loginPresenter.doLogin("test", "test");
+
+        verify(loginViewMock).showLoginSuccessMessage();
     }
 
     @Test
-    public void isLoginSuccessFullForAnExistingUserReturnsTrue(){
-        LoginPresenter loginPresenter = new LoginPresenter(loginView);
+    public void doLoginWhenCredentialsAreNotValidCallsLoginViewShowErrorMessageForIncorrectUser(){
+        when(requestHandlerMock.getPostResponse(anyString(), anyString())).thenReturn(false);
 
-        loginPresenter.isLoginSuccessFull("marian", "android");
-    }
+        loginPresenter.doLogin("test", "test");
 
-    @Test
-    public void doLoginWithTheCorrectCredentialsCallsLoginViewShowLoginSuccessMessage(){
-        ILoginView loginView = mock(ILoginView.class);
-        LoginPresenter loginPresenter = new LoginPresenter(loginView);
-        loginPresenter.doLogin("marian", "android");
-
-        verify(loginView).showLoginSuccessMessage();
-    }
-
-    @Test
-    public void doLoginWithIncorrectCredentialsCallsLoginViewshowErrorMessageForIncorrectUser(){
-        ILoginView loginView = mock(ILoginView.class);
-        LoginPresenter loginPresenter = new LoginPresenter(loginView);
-        loginPresenter.doLogin("xyz", "xyz");
-
-        verify(loginView).showErrorMessageForIncorrectUser();
-    }
-
-    @Test
-    public void doLoginWith3IncorrectCredentialsCallsLoginViewShowErrorMessageForMaxLoginAttempts(){
-        ILoginView loginView = mock(ILoginView.class);
-        LoginPresenter loginPresenter = new LoginPresenter(loginView);
-        loginPresenter.doLogin("xyz", "xyz");
-        loginPresenter.doLogin("xyz", "xyz");
-        loginPresenter.doLogin("xyz", "xyz");
-        loginPresenter.doLogin("xyz", "xyz");
-
-        verify(loginView).showErrorMessageForMaxLoginAttempts();
+        verify(loginViewMock).showErrorMessageForIncorrectUser();
     }
 
     @After

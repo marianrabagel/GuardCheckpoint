@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.rabagel.marian.guardcheckpoint.Communication.RequestHandler;
 import com.rabagel.marian.guardcheckpoint.Login.Contracts.ILoginView;
 import com.rabagel.marian.guardcheckpoint.R;
 
@@ -29,16 +30,12 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         password = findViewById(R.id.password_textBox);
         loginButton = findViewById(R.id.login_button);
         loginButton.setOnClickListener((View view) ->
-                loginPresenter.doLogin(userName.getText().toString().trim(), password.getText().toString().trim()));
+                loginPresenter.doLogin(userName.getText().toString(), password.getText().toString()));
     }
 
     private void initializePresenter() {
-        loginPresenter = new LoginPresenter(this);
-    }
-
-    @Override
-    public void showErrorMessageForMaxLoginAttempts() {
-        Snackbar.make(loginButton, R.string.MaxTotalAttemptsMessage, Snackbar.LENGTH_LONG).show();
+        RequestHandler requestHandler = new RequestHandler(this);
+        loginPresenter = new LoginPresenter(this, requestHandler);
     }
 
     @Override

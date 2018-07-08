@@ -1,47 +1,22 @@
 package com.rabagel.marian.guardcheckpoint.Communication;
 
+import android.content.Context;
+
 import com.rabagel.marian.guardcheckpoint.Communication.Contracts.IRequestHandler;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.mockito.Mockito.mock;
+
 
 public class RequestHandlerTest {
     IRequestHandler requestHandler;
     @Before
     public void setUp() throws Exception {
-        requestHandler = new RequestHandler();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void isUserNameAndPasswordValidWhenUserNameIsNullThrowsIllegalArgumentException(){
-        requestHandler.isUserNameAndPasswordValid(null, null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void isUserNameAndPasswordValidWhenPasswordIsNullThrowsIllegalArgumentException(){
-        requestHandler.isUserNameAndPasswordValid(null, null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void isUserNameAndPasswordValidWhenUserNameIsEmptyStringThrowsIllegalArgumentException(){
-        requestHandler.isUserNameAndPasswordValid("", "");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void isUserNameAndPasswordValidWhenPasswordIsEmptyStringThrowsIllegalArgumentException(){
-        requestHandler.isUserNameAndPasswordValid("test", "");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void isUserNameAndPasswordValidWhenUserNameIsBlankStringThrowsIllegalArgumentException(){
-        requestHandler.isUserNameAndPasswordValid("   ", "   ");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void isUserNameAndPasswordValidWhenPasswordIsBlankStringThrowsIllegalArgumentException(){
-        requestHandler.isUserNameAndPasswordValid("test", "   ");
+        Context contextMock = mock(Context.class);
+        requestHandler = new RequestHandler(contextMock);
     }
 
     @After

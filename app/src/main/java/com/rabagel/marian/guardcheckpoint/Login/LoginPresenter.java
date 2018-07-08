@@ -1,51 +1,42 @@
 package com.rabagel.marian.guardcheckpoint.Login;
 
+import com.rabagel.marian.guardcheckpoint.Communication.Contracts.IRequestHandler;
 import com.rabagel.marian.guardcheckpoint.Login.Contracts.ILoginView;
 
 public class LoginPresenter {
 
-    private static final int MAX_LOGIN_ATTEMPT = 3;
     private final ILoginView loginView;
+    private final IRequestHandler requestHandler;
     private int loginAttempt;
 
-    public LoginPresenter(ILoginView loginView){
+    public LoginPresenter(ILoginView loginView, IRequestHandler requestHandler){
         this.loginView = loginView;
+        this.requestHandler = requestHandler;
     }
 
-    public int incrementLoginAttempt(){
+    private int incrementLoginAttempt(){
         return ++loginAttempt;
     }
 
-    public boolean isLoginAttemptExceeded(){
-        return loginAttempt >= MAX_LOGIN_ATTEMPT;
-    }
-
-    public boolean isLoginSuccessFull(String userName, String password) {
-        if(isLoginAttemptExceeded()){
-            return false;
+    private boolean hasRights(String userName, String password) {
+        if(userName == null || userName.trim().isEmpty()){
+            throw new IllegalArgumentException("username or password is null");
+        }
+        if(password == null || password.trim().isEmpty()){
+            throw new IllegalArgumentException("username or password is null");
         }
 
-        incrementLoginAttempt();
-
-        return hasRights(userName, password);
-
-    }
-
-    private boolean hasRights(String userName, String password) {
-        return userName.equals("marian") && password.equals("android");
+        return requestHandler.getPostResponse(userName, password);
     }
 
     public void doLogin(String userName, String password) {
-        if(isLoginAttemptExceeded()){
-            loginView.showErrorMessageForMaxLoginAttempts();
-        }
+        incrementLoginAttempt();
 
-        if(hasRights(userName, password)){
-            loginView.showLoginSuccessMessage();
+        if (!hasRights(userName, password)) {
+            loginView.showErrorMessageForIncorrectUser();
             return;
         }
 
-        incrementLoginAttempt();
-        loginView.showErrorMessageForIncorrectUser();
+        loginView.showLoginSuccessMessage();
     }
 }
